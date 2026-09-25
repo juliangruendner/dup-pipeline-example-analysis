@@ -160,6 +160,10 @@ shows the `referenced` case.
 
 ### 1b. Medication statement -> Medication -> Medication Ingredient
 
+Example screenshot crtdl, green arrows = Medication statement -> Medication -> Medication Ingredient
+
+![alt text](image.png)
+
 Same pattern as join 1, starting from `med_statement`. Statements have either
 `effective[x]` as a date-time or as a period, so `effective_start` takes the date-time if present,
 otherwise the period start. `ingredient_active` shows `ingredient.isActive`.
