@@ -1,7 +1,7 @@
 # dup-pipeline-analysis-example
 
 Example analysis of a DUP pipeline export. The export in
-`20260925_1146_e184ccf8-df64-48c0-b2e4-ddb9ed15f2da/` contains the FHIR resources (`dimp/*.ndjson`),
+`20260925_1235_88129f43-b72a-4565-af8a-7cc48a3363be/` contains the FHIR resources (`dimp/*.ndjson`),
 the SQL-on-FHIR ViewDefinitions (`viewdefinitions/`) and the flattened tables they produce (`csv/`).
 
 `example_joins.py` loads all CSV tables into an in-memory SQLite database and runs example joins.
@@ -49,8 +49,9 @@ The flattening lookup determines the column layout for each selected attribute:
 ### Linked groups
 
 An attribute that holds a reference can point to another attribute group with `linkedGroups`. This is
-how the tables become joinable. Example: `MedicationAdministration.medication[x]` links to the
-`MII PR Medikation Medication` group, and `Medication.ingredient.item[x]` links to the
+how the tables become joinable. Example: `MedicationAdministration.medication[x]` and
+`MedicationStatement.medication[x]` link to the `MII PR Medikation Medication` group, and
+`Medication.ingredient.item[x]` links to the
 `Medication Ingredient` group. `Medication Ingredient` has `includeReferenceOnly: true`. It therefore
 contains only Medications that another extracted resource references, here the glucose solution `b465502f...`.
 
@@ -154,7 +155,38 @@ from the medication's own ingredient columns (`ingredient_source = inline`). Bec
 
 Result: 22 rows from 20 administrations. Medications with two ingredients have two rows, so their
 administrations appear twice. Example: `ab688c10...` (J01CR02, amoxicillin and clavulanic acid). In this
-export no administration uses the compound Medication `85f96e98...`, so every row is `inline`.
+export no administration uses the compound Medication `85f96e98...`, so every row is `inline`. Join 1b
+shows the `referenced` case.
+
+### 1b. Medication statement -> Medication -> Medication Ingredient
+
+Same pattern as join 1, starting from `med_statement`. Statements have either
+`effective[x]` as a date-time or as a period, so `effective_start` takes the date-time if present,
+otherwise the period start. `ingredient_active` shows `ingredient.isActive`.
+
+Statement `caeb31ac...` references the compound Medication `85f96e98...`. It shows all three levels
+in one result: statement, medication and the ingredients of the referenced Medication.
+
+| ingredient_source | ingredient_medication_id | ingredient_ask | ingredient_active | ingredient_strength |
+| --- | --- | --- | --- | --- |
+| inline | | (masked, Doxorubicin) | true | 85 mg |
+| referenced | b465502f... | 12829 (glucose) | true | 50 g |
+| referenced | b465502f... | 00343 (water) | false | |
+
+The single statement becomes three rows:
+
+1. `85f96e98...` has two ingredient rows (see [Example: Medication with two ingredients](#example-medication-with-two-ingredients)).
+2. The inline row has no reference and stays one row.
+3. The referencing row matches both ingredient rows of `b465502f...` and becomes two rows.
+
+The ingredients sit on two levels. Level 1 holds the ingredients of the compound Medication
+(Doxorubicin, glucose solution). Level 2 holds the ingredients of the glucose solution (glucose, water).
+The query replaces the reference with level 2. The glucose solution itself therefore appears only as
+`ingredient_medication_id`, not as its own ingredient row. An analysis at ingredient level must decide
+which level it needs. The `ingredient_active` column separates active ingredients from excipients such
+as the water.
+
+Result: 27 rows from 23 statements.
 
 ### 2. Medication -> Medication Ingredient
 
