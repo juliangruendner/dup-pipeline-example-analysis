@@ -21,6 +21,7 @@ TABLES = {
     "Laboratory test.csv": "lab",
     "MII PR Prozedur Procedure.csv": "procedure",
     "Medication administration.csv": "med_admin",
+    "Medication statement.csv": "med_statement",
     "MII PR Medikation Medication.csv": "medication",
     "Medication Ingredient.csv": "med_ingredient",
 }
@@ -90,6 +91,39 @@ LEFT JOIN med_ingredient mi
 ORDER BY ma.patient, administered_at
 """
 
+# 1b. Medication statement -> Medication -> Medication Ingredient. Same pattern as 1.
+# The compound Medication 85f96e98... is only referenced by a statement, so this join shows the
+# 'referenced' case: one inline ingredient row plus the rows of the referenced glucose solution.
+MED_STATEMENT_MED_INGREDIENT = """
+SELECT ms.id                                                   AS med_statement_id,
+       ms.patient,
+       ms.MedicationStatement_status                           AS status,
+       COALESCE(ms.MedicationStatement_effective_X_Effectivedatetime,
+                ms.MedicationStatement_effective_X_Effectiveperiod_start) AS effective_start,
+       ms.MedicationStatement_effective_X_Effectiveperiod_end  AS effective_end,
+       m.id                                                    AS medication_id,
+       m.Medication_code_codingAtcclassde_code                 AS atc,
+       CASE WHEN mi.id IS NOT NULL THEN 'referenced' ELSE 'inline' END AS ingredient_source,
+       mi.id                                                   AS ingredient_medication_id,
+       CASE WHEN mi.id IS NOT NULL
+            THEN mi.Medication_ingredient_item_X_Itemcodeableconcept_codingAsk_code
+            ELSE m.Medication_ingredient_item_X_Itemcodeableconcept_codingAsk_code END AS ingredient_ask,
+       CASE WHEN mi.id IS NOT NULL
+            THEN mi.Medication_ingredient_isActive
+            ELSE m.Medication_ingredient_isActive END          AS ingredient_active,
+       CASE WHEN mi.id IS NOT NULL
+            THEN mi.Medication_ingredient_strength_numerator_value
+                 || ' ' || mi.Medication_ingredient_strength_numerator_unit
+            ELSE m.Medication_ingredient_strength_numerator_value
+                 || ' ' || m.Medication_ingredient_strength_numerator_unit END AS ingredient_strength
+FROM med_statement ms
+LEFT JOIN medication m
+       ON ms.MedicationStatement_medication_X_Medicationreference_reference = 'Medication/' || m.id
+LEFT JOIN med_ingredient mi
+       ON m.Medication_ingredient_item_X_Itemreference_reference = 'Medication/' || mi.id
+ORDER BY ms.patient, effective_start
+"""
+
 # 2. Medication -> Medication Ingredient only, to show the ingredient link independent of administrations.
 MED_INGREDIENT = """
 SELECT m.id                                                   AS medication_id,
@@ -145,6 +179,8 @@ def main() -> None:
     OUTPUT_DIR.mkdir(exist_ok=True)
     show(con, "Medication administration -> Medication -> Medication Ingredient", MED_ADMIN_MED_INGREDIENT,
          OUTPUT_DIR / "med_admin_medication_ingredient.csv")
+    show(con, "Medication statement -> Medication -> Medication Ingredient", MED_STATEMENT_MED_INGREDIENT,
+         OUTPUT_DIR / "med_statement_medication_ingredient.csv")
     show(con, "Medication -> Medication Ingredient", MED_INGREDIENT,
          OUTPUT_DIR / "medication_ingredient.csv")
     show(con, "Patient -> Medication administration -> Medication (summary)", PATIENT_MED_SUMMARY,
