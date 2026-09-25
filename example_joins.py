@@ -10,7 +10,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
-DEFAULT_CSV_DIR = Path(__file__).parent / "20260925_1146_e184ccf8-df64-48c0-b2e4-ddb9ed15f2da" / "csv"
+DEFAULT_CSV_DIR = Path(__file__).parent / "20260925_1235_88129f43-b72a-4565-af8a-7cc48a3363be" / "csv"
 OUTPUT_DIR = Path(__file__).parent / "joins_output"
 
 # CSV file name -> SQL table name

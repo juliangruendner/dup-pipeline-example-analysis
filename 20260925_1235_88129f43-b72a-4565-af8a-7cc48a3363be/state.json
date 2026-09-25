@@ -1,37 +1,37 @@
 {
-  "job_id": "20260925_1146_e184ccf8-df64-48c0-b2e4-ddb9ed15f2da",
-  "created_at": "2026-09-25T13:46:17.026737+02:00",
-  "updated_at": "2026-09-25T13:46:29.48063+02:00",
+  "job_id": "20260925_1235_88129f43-b72a-4565-af8a-7cc48a3363be",
+  "created_at": "2026-09-25T14:35:56.27341+02:00",
+  "updated_at": "2026-09-25T14:36:10.794389+02:00",
   "input_source": "",
   "input_type": "local_directory",
-  "crtdl_path": "jobs/20260925_1146_e184ccf8-df64-48c0-b2e4-ddb9ed15f2da/enriched-crtdl.json",
-  "torch_extraction_url": "http://localhost:8086/fhir/__status/9b29d1ed-79a5-4602-a05e-0cb886d7fa28",
-  "torch_job_id": "9b29d1ed-79a5-4602-a05e-0cb886d7fa28",
+  "crtdl_path": "jobs/20260925_1235_88129f43-b72a-4565-af8a-7cc48a3363be/enriched-crtdl.json",
+  "torch_extraction_url": "http://localhost:8086/fhir/__status/a3461e61-1d05-42ea-98b2-b2fac12c4bae",
+  "torch_job_id": "a3461e61-1d05-42ea-98b2-b2fac12c4bae",
   "current_step": "",
   "status": "completed",
   "steps": [
     {
       "name": "torch",
       "status": "completed",
-      "started_at": "2026-09-25T13:46:17.034969+02:00",
-      "completed_at": "2026-09-25T13:46:22.105682+02:00",
+      "started_at": "2026-09-25T14:35:56.281619+02:00",
+      "completed_at": "2026-09-25T14:36:01.349371+02:00",
       "files_processed": 2,
-      "bytes_processed": 220809
+      "bytes_processed": 245720
     },
     {
       "name": "dimp",
       "status": "completed",
-      "started_at": "2026-09-25T13:46:22.106373+02:00",
-      "completed_at": "2026-09-25T13:46:23.222296+02:00",
+      "started_at": "2026-09-25T14:36:01.349788+02:00",
+      "completed_at": "2026-09-25T14:36:02.283875+02:00",
       "files_processed": 2,
       "bytes_processed": 0
     },
     {
       "name": "flattening",
       "status": "completed",
-      "started_at": "2026-09-25T13:46:23.223419+02:00",
-      "completed_at": "2026-09-25T13:46:29.480273+02:00",
-      "files_processed": 9,
+      "started_at": "2026-09-25T14:36:02.284157+02:00",
+      "completed_at": "2026-09-25T14:36:10.793565+02:00",
+      "files_processed": 10,
       "bytes_processed": 0
     }
   ],
@@ -150,5 +150,5 @@
     "jobs_dir": "./jobs"
   },
   "total_files": 2,
-  "total_bytes": 220809
+  "total_bytes": 245720
 }

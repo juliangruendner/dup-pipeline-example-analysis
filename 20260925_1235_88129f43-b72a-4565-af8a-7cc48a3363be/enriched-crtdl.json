@@ -311,6 +311,32 @@
         "id": "48176de1-0ad0-4191-a18b-53f260319730",
         "includeReferenceOnly": true,
         "name": "Medication Ingredient"
+      },
+      {
+        "attributes": [
+          {
+            "attributeRef": "MedicationStatement.effective[x]",
+            "mustHave": false
+          },
+          {
+            "attributeRef": "MedicationStatement.identifier",
+            "mustHave": false
+          },
+          {
+            "attributeRef": "MedicationStatement.status",
+            "mustHave": false
+          },
+          {
+            "attributeRef": "MedicationStatement.medication[x]",
+            "linkedGroups": [
+              "07c08085-d2ae-4ed3-a0ec-385ac928f91a"
+            ],
+            "mustHave": false
+          }
+        ],
+        "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-medikation/StructureDefinition/MedicationStatement",
+        "id": "69ca6ff1-d2c6-4d66-ae9b-4675004b5116",
+        "name": "Medication statement"
       }
     ]
   },
