@@ -1,0 +1,11 @@
+id,patient,Condition_recordedDate,Condition_code_codingSct_code,Condition_code_codingSct_system,Condition_code_codingSct_version,Condition_encounter_reference
+c4504c79186aee9e8cc2a2f9e8062fb4,Patient/ac0351e53abf017a11c8fe784d377439,2019-05-14,37796009,http://snomed.info/sct,http://snomed.info/sct/900000000000207008/version/20230731,
+de071a019242ffcbb1adc8363590407b,Patient/c52f749227aecb7c5860fdf2afe4c2d5,2024-02-20,79883001,http://snomed.info/sct,http://snomed.info/sct/900000000000207008/version/20230731,
+ebba2ba28543e40a2cd03de159989339,Patient/27e264cd238a0e73b2fced085731bea8,2024-01-08,10509002,http://snomed.info/sct,http://snomed.info/sct/900000000000207008/version/20230731,
+1b067e6055b0f587f8879fb8f5081de6,Patient/9be02ab7a5f4dd923a7ec9704457268f,2023-11-10,413838009,http://snomed.info/sct,http://snomed.info/sct/900000000000207008/version/20230731,
+6ce2ef8a3570adcbc8d65b11cfcd7b4c,Patient/2bb7917eb218f41eb118d42720dec269,2023-07-10,129103003,http://snomed.info/sct,http://snomed.info/sct/900000000000207008/version/20230731,
+5dd480d3f16000780b897b57c0fc2d6e,Patient/c872d8720e9b514cfd28039567d5de0f,2022-03-12,4556007,http://snomed.info/sct,http://snomed.info/sct/900000000000207008/version/20230731,
+c2ef14cb3f91b67851ac55172a9590cc,Patient/3a6e0f510a7f7367667a71a4f29b4d40,2022-04-02,447886005,http://snomed.info/sct,http://snomed.info/sct/900000000000207008/version/20230731,
+399f38ed2eff5df11f0b25482f6c06b6,Patient/3a6e0f510a7f7367667a71a4f29b4d40,2022-11-30,,,,
+93743406f8fdb768291786d9ee4ef389,Patient/4c90911a0e5fd3e4a031df4450c09c8f,2024-02-21,13420004,http://snomed.info/sct,http://snomed.info/sct/900000000000207008/version/20230731,
+f7c078dec8680401518dc4de8ac02d38,Patient/4c90911a0e5fd3e4a031df4450c09c8f,2024-02-21,,,,
