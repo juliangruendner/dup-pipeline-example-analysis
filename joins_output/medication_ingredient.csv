@@ -1,0 +1,3 @@
+medication_id,ingredient_ref,ingredient_atc,ingredient_snomed,ingredient_active,ingredient_strength
+85f96e988efc6d21552be359612c8d01,Medication/b465502f20feefb51452b4e358f1be2c,V06DC01,67079006,true,50 g / 1000 ml
+85f96e988efc6d21552be359612c8d01,Medication/b465502f20feefb51452b4e358f1be2c,V06DC01,11713004,false,

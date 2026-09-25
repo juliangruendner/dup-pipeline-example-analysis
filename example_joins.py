@@ -1,5 +1,7 @@
 """Load the DUP pipeline CSV exports into an in-memory SQLite database and run example joins.
 
+The join results are printed and written as CSV files to joins_output/.
+
 Usage: python3 example_joins.py [csv_dir]
 """
 
@@ -9,6 +11,7 @@ import sys
 from pathlib import Path
 
 DEFAULT_CSV_DIR = Path(__file__).parent / "20260925_1146_e184ccf8-df64-48c0-b2e4-ddb9ed15f2da" / "csv"
+OUTPUT_DIR = Path(__file__).parent / "joins_output"
 
 # CSV file name -> SQL table name
 TABLES = {
@@ -39,15 +42,21 @@ def load_csvs(csv_dir: Path) -> sqlite3.Connection:
     return con
 
 
-def show(con: sqlite3.Connection, title: str, sql: str) -> None:
+def show(con: sqlite3.Connection, title: str, sql: str, out_file: Path) -> None:
     cur = con.execute(sql)
     header = [d[0] for d in cur.description]
     rows = cur.fetchall()
-    print(f"\n== {title} ({len(rows)} rows)")
+    print(f"\n== {title} ({len(rows)} rows) -> {out_file}")
     widths = [max(len(str(x)) for x in [h, *(r[i] for r in rows)]) for i, h in enumerate(header)]
     print("  ".join(h.ljust(w) for h, w in zip(header, widths)))
     for r in rows:
         print("  ".join(str(v).ljust(w) for v, w in zip(r, widths)))
+
+    # NULL is written as an empty cell, as in the input CSVs
+    with open(out_file, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(header)
+        writer.writerows(rows)
 
 
 # References in the CSVs have the form "<ResourceType>/<id>", while the id columns hold the bare id.
@@ -133,10 +142,15 @@ ORDER BY l.patient, measured_at
 def main() -> None:
     csv_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_CSV_DIR
     con = load_csvs(csv_dir)
-    show(con, "Medication administration -> Medication -> Medication Ingredient", MED_ADMIN_MED_INGREDIENT)
-    show(con, "Medication -> Medication Ingredient", MED_INGREDIENT)
-    show(con, "Patient -> Medication administration -> Medication (summary)", PATIENT_MED_SUMMARY)
-    show(con, "Laboratory test -> Encounter", LAB_ENCOUNTER)
+    OUTPUT_DIR.mkdir(exist_ok=True)
+    show(con, "Medication administration -> Medication -> Medication Ingredient", MED_ADMIN_MED_INGREDIENT,
+         OUTPUT_DIR / "med_admin_medication_ingredient.csv")
+    show(con, "Medication -> Medication Ingredient", MED_INGREDIENT,
+         OUTPUT_DIR / "medication_ingredient.csv")
+    show(con, "Patient -> Medication administration -> Medication (summary)", PATIENT_MED_SUMMARY,
+         OUTPUT_DIR / "patient_medication_summary.csv")
+    show(con, "Laboratory test -> Encounter", LAB_ENCOUNTER,
+         OUTPUT_DIR / "lab_encounter.csv")
 
 
 if __name__ == "__main__":
